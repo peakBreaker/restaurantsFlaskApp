@@ -1,15 +1,5 @@
-from sqlalchemy import create_engine #, func to aggregate
-from sqlalchemy.orm import sessionmaker
 
-from resturants import Base, Resturants
-
-engine = create_engine('sqlite:///resturants.db')
-
-Base.metadata.bind = engine
-
-DBSession = sessionmaker(bind=engine)
-
-session = DBSession()
+from resturants import Resturants
 
 def getseeddata():
     """Reads the addresses and names files and returns a list of tuples"""
@@ -34,23 +24,23 @@ def getseeddata():
         i += 1
     return seedlist
 
-
-def populate_resturants():
+def populateResturants(session):
     """
     Queries the database for resturants and returns a list of names of
     resturants ordered by name alphabetically.
     """
-    for s in getseeddata():
-        print s[0]
-        resturant = Resturants(
-                                name = s[0],
-                                address = s[1],
-                                city = s[2],
-                                state = s[3],
-                                zipCode = s[4]
-                              )
-        session.add(resturant)
-        session.commit()
-    return "Populated resturants"
-
-print populate_resturants()
+    try:
+        for s in getseeddata():
+            print s[0]
+            resturant = Resturants(
+                                    name = s[0],
+                                    address = s[1],
+                                    city = s[2],
+                                    state = s[3],
+                                    zipCode = s[4]
+                                  )
+            session.add(resturant)
+            session.commit()
+        return "Populated resturants"
+    except Exception as e:
+        return e
