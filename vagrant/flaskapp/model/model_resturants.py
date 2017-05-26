@@ -1,15 +1,10 @@
-from sqlalchemy import create_engine #, func to aggregate
-from sqlalchemy.orm import sessionmaker
+"""Contains models for doing CRUD on the resturants table"""
 
 from resturants import Base, Resturants, MenuItems
 
-engine = create_engine('sqlite:///resturants.db')
+from makesession import makesession
 
-Base.metadata.bind = engine
-
-DBSession = sessionmaker(bind=engine)
-
-session = DBSession()
+session = makesession(Base)
 
 def list_resturants(resturantid):
     """
@@ -19,19 +14,8 @@ def list_resturants(resturantid):
     if resturantid == False:
         resturantlist = session.query(Resturants).order_by(Resturants.name).all()
     else:
-        resturantlist = session.query(Resturants).filter_by(id=resturantid).all()
+        resturantlist = session.query(Resturants).filter_by(id=resturantid).one()
     return resturantlist
-
-def list_menu(resturantid=False):
-    """
-    Lists out menu for all resturants if no arg is given, or a specific
-    resturant id if arg is given
-    """
-    if resturantid == False:
-        menulist = session.query(MenuItems).all()
-    else:
-        menulist = session.query(MenuItems).filter_by(resturant_id=resturantid).all()
-    return menulist
 
 def insert_resturant(name, address, city, state, zipCode):
     """Gets parameters for a new resturants and adds it into the db"""

@@ -1,3 +1,5 @@
+"""Contains the classes for the database models"""
+
 from sqlalchemy import Column, ForeignKey, Integer, String, Date, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -21,6 +23,15 @@ class MenuItems(Base):
     description = Column(String(1000))
     price = Column(Integer)
     resturant_id = Column(Integer, ForeignKey('resturants.id'))
+
+    @property
+    def serialize(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+            'price': self.price,
+        }
 
 engine = create_engine('sqlite:///resturants.db')
 

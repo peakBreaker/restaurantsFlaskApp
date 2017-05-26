@@ -1,5 +1,5 @@
 
-from resturants import Resturants
+from context import Resturants
 
 def getseeddata():
     """Reads the addresses and names files and returns a list of tuples"""

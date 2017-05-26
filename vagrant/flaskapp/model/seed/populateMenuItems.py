@@ -1,5 +1,5 @@
 
-from resturants import Base, Resturants, MenuItems
+from context import Base, Resturants, MenuItems
 
 import random
 
@@ -10,12 +10,12 @@ def randprice():
 def getname():
     """Gets a random name from foodnames file"""
     # foodnames downloaded from http://eatingatoz.com/food-list/
-    s = u'%s' % random.sample(open('seed/foodnames', 'r').read().split('\n'), 1)[0]
+    s = u'%s' % random.sample(open('data/foodnames', 'r').read().split('\n'), 1)[0]
     return s
 
 def getdescr():
     """Generates a random deescription for menuitem"""
-    s = u'%s' % random.sample(open('seed/loremipsum', 'r').read().split('\n'), 1)[0]
+    s = u'%s' % random.sample(open('data/loremipsum', 'r').read().split('\n'), 1)[0]
     return s
 
 def generateMenuItem(resturantid, session):

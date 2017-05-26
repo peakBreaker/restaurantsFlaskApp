@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Add a new resturant</title>
-  </head>
-  <body>
+{% extends "base.html" %}
+
+{% block content %}
+
     <h1>Lets add a new resturant</h1>
     <form class="form" action="/resturants/new" enctype='multipart/form-data' method="post">
       <table>
@@ -42,5 +39,5 @@
 
       <input type="Submit">
     </form>
-  </body>
-</html>
+
+{% endblock %}
