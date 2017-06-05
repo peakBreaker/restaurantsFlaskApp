@@ -15,6 +15,15 @@ class Resturants(Base):
     city = Column(String(80))
     state = Column(String(20))
     zipCode = Column(String(10))
+    user_id = Column(Integer, ForeignKey('users.id'))
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
 
 class MenuItems(Base):
     __tablename__ = 'menuitems'
@@ -23,6 +32,7 @@ class MenuItems(Base):
     description = Column(String(1000))
     price = Column(Integer)
     resturant_id = Column(Integer, ForeignKey('resturants.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
 
     @property
     def serialize(self):
@@ -33,6 +43,15 @@ class MenuItems(Base):
             'price': self.price,
         }
 
-engine = create_engine('sqlite:///resturants.db')
+class Users(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key = True)
+    name = Column(String(80), nullable = False)
+    email = Column(String(80), nullable = False)
+    picture = Column(String(250))
+
+
+
+engine = create_engine('sqlite:///resturantmenuwithusers.db')
 
 Base.metadata.create_all(engine)

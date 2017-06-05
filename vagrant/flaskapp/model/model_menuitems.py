@@ -20,14 +20,15 @@ def get_resturantitem(resturant_id, menuitem_id):
     menulist = session.query(MenuItems).filter_by(resturant_id=resturant_id).all()
     return menulist[int(menuitem_id)].serialize
 
-def insert_menuitem(name, description, price, resturant_id):
+def insert_menuitem(name, description, price, resturant_id, user_id):
     """Inserts a new menuitem row in the db"""
     print "inserting new menuitem"
     item = MenuItems(
                     name=name,
                     description=description,
                     price=price,
-                    resturant_id=resturant_id
+                    resturant_id=resturant_id,
+                    user_id=user_id
                     )
     session.add(item)
     session.commit()

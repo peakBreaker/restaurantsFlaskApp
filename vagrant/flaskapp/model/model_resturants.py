@@ -6,25 +6,34 @@ from makesession import makesession
 
 session = makesession(Base)
 
-def list_resturants(resturantid):
+def list_resturants(resturantid, user_id=False):
     """
     Queries the database for resturants and returns a list of
     resturants objects ordered by name alphabetically.
     """
-    if resturantid == False:
-        resturantlist = session.query(Resturants).order_by(Resturants.name).all()
+    if resturantid == None:
+        return (session.query(Resturants).order_by(Resturants.name).all(), False)
     else:
         resturantlist = session.query(Resturants).filter_by(id=resturantid).one()
-    return resturantlist
+        print "got the resturantlist"
+        print resturantlist.name
+        if resturantlist.user_id == user_id:
+            # Then we know that the user id is the owner of the resturant
+            print "user is owner"
+            return ([resturantlist], True)
+        else:
+            return ([resturantlist], False)
 
-def insert_resturant(name, address, city, state, zipCode):
+def insert_resturant(name, address, city, state, zipCode, user_id):
     """Gets parameters for a new resturants and adds it into the db"""
+    print "insert resturant model running"
     resturant = Resturants(
                             name=name,
                             address=address,
                             city=city,
                             state=state,
-                            zipCode=zipCode
+                            zipCode=zipCode,
+                            user_id=user_id
                           )
     session.add(resturant)
     session.commit()

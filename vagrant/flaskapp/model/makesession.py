@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 def makesession(Base):
     #Initiate the engine obj
-    engine = create_engine('sqlite:///resturants.db')
+    engine = create_engine('sqlite:///resturantmenuwithusers.db')
     # Bind engine and the base obj
     Base.metadata.bind = engine
     # Init the session
