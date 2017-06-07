@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Are you sure you want to delete menuitem with id {{menuitem_id}}</h1>
+
+    <form action="/menu/{{menuitem_id}}/delete" method="post">
+      <input type="Submit">
+      <br>
+      <a href="/menu">Cancel</a>
+    </form>
+
+{% endblock %}

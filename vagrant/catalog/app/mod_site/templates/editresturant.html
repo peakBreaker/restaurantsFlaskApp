@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <body>
+    <h1>Lets edit the resturant with id = {id}</h1>
+    <form class="form" action="/resturants/edit" enctype='multipart/form-data' method="post">
+      <table>
+        <tr class="row">
+          <td class="col">Name:</td>
+          <td class="col">
+            <input type="text" name="name" value="Resturant">
+          </td>
+        </tr>
+      </table>
+      <input type="hidden" name="id" value={id}>
+      <input type="Submit">
+    </form>
+
+{% enblock %}

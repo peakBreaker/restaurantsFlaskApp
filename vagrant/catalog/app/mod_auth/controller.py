@@ -1,22 +1,6 @@
-"""This program routes the urls and requests to the correct handlers"""
 
-from flask import Flask, url_for, render_template, request, flash, redirect
-# Imports for dbmodels
-from model.model_resturants import list_resturants, editname_resturant, delete_resturant
-from model.model_menuitems import list_menu
-from model.model_users import createUser, getUserInfo, getUserID
-
-# Imports for handeling sessions
-from flask import session as login_session
-import random, string
-
-#Imports the handlers
-from handlers.newresturant import insertresturant, render_newresturant
-
-from handlers.newmenuitem import insertmenuitem, render_newmenuitem
-from handlers.altermenuitem import  editmenuitem, render_editmenuitem, \
-                                    deletemenuitem, render_deletemenuitem
-from handlers.listmenujson import listmenujson, getitemjson
+# Imports for flask
+from flask import Blueprint, render_template, url_for, flash
 
 # Imports for oath2
 from oauth2client.client import flow_from_clientsecrets
@@ -26,131 +10,23 @@ import json
 from flask import make_response
 import requests
 
-app = Flask(__name__)
-
-# Loading client secret json and setting constants
-
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Restaurant Menu Application"
-
-# ROUTES FOR RESTURANTS --------------------------------------------------------
-
-@app.route('/resturants/new', methods=['GET', 'POST'])
-def NewResturants():
-    """Gets the url resturant id and handles inserting"""
-    if 'username' not in login_session:
-        return redirect('/login')
-    if request.method == 'POST':
-        return insertresturant(login_session['user_id'])
-    else:
-        return render_newresturant()
-
-@app.route('/resturants')
-@app.route('/resturants/<int:resturant_id>/')
-def ListResturants(resturant_id=None):
-    """Gets the url resturant id and lists out info on that or all resturants"""
-    # First check if user is logged in
-    if 'username' not in login_session:
-        return render_template(
-                                'publicresturants.html',
-                                resturants=list_resturants(resturant_id)
-                                )
-    # If user is logged in we render resturants.html page with appropriate data
-    else:
-        r = list_resturants(resturant_id, login_session['user_id'])
-        resturant = r[0]
-        owner = r[1]
-        print "checked resturant in db.. resturant is and user is owner?"
-        print resturant
-        print owner
-        return render_template(
-                                'resturants.html',
-                                resturants=resturant,
-                                owner=owner
-                                )
-
-@app.route('/resturants/<int:resturant_id>/edit')
-def EditResturants(resturant_id=False):
-    """Gets the url resturant id and handles editing"""
-    if 'username' not in login_session:
-        return redirect('/login')
-    output = open("views/editresturant.html", "r")
-    output = output.read().format(id=resturant_id)
-    return output
-
-@app.route('/resturants/<int:resturant_id>/delete')
-def DeleteResturant(resturant_id=0):
-    if 'username' not in login_session:
-        return redirect('/login')
-    output = open("views/deleteresturant.html", "r")
-    output = output.read().format(id=resturant_id)
-    return output
-
-# CRUD FOR MENUITEMS -----------------------------------------------------------
-
-@app.route('/resturants/<int:resturant_id>/menu/new', methods = ['GET', 'POST'])
-def newmenuitem(resturant_id=False):
-    if 'username' not in login_session:
-        return redirect('/login')
-    if request.method == 'POST':
-        success = insertnewmenuitem(resturant_id, login_session['user_id'])
-        if success:
-            flash("New menuitem created!")
-            return redirect(url_for("showmenu", resturant_id=resturant_id))
-    else:
-        return render_newmenuitem(resturant_id)
-
-@app.route('/menu')
-@app.route('/resturants/<int:resturant_id>/menu')
-def showmenu(resturant_id=False):
-    print "got request for resturantmenu"
-    items = list_menu(resturant_id)
-    resturant = list_resturants(resturant_id)
-    return render_template('menu.html', resturant=resturant, items=items)
-
-@app.route('/menu/<int:menuitem_id>/edit', methods = ['GET', 'POST'])
-def editmenu(menuitem_id=False):
-    if 'username' not in login_session:
-        return redirect('/login')
-    print "Got request to edit"
-    print menuitem_id
-    if request.method == 'POST':
-        resturant_id = editmenuitem(menuitem_id)
-        if resturant_id:
-            flash("Menuitem edited!")
-            return redirect(url_for("showmenu", resturant_id=resturant_id))
-    else:
-        return render_editmenuitem(menuitem_id)
-
-@app.route('/menu/<int:menuitem_id>/delete', methods=['GET', 'POST'])
-def delmenuitem(menuitem_id=False):
-    if 'username' not in login_session:
-        return redirect('/login')
-    if request.method == 'POST':
-        resturant_id = deletemenuitem(menuitem_id)
-        if resturant_id:
-            flash("Menuitem deleted!")
-            return redirect(url_for("showmenu", resturant_id=resturant_id))
-    else:
-        return render_deletemenuitem(menuitem_id)
-
-# JSON REST API ----------------------------------------------------------------
-
-@app.route('/resturant/<int:resturant_id>/menu/json')
-@app.route('/resturant/<int:resturant_id>/menu/<int:menuitem_id>/json')
-def getjsondata(resturant_id=False, menuitem_id=False):
-    print "got json request!"
-    if menuitem_id == False:
-        jsonfied = listmenujson(resturant_id)
-        return jsonfied
-    else:
-        jsonfied = getitemjson(resturant_id, menuitem_id)
-        return jsonfied
+mod = Blueprint('auth', __name__)
 
 # Login ------------------------------------------------------------------------
 
-@app.route('/gconnect', methods=['POST'])
+@mod.route('/login')
+def login():
+    """Generates a login session and renders the login.html page"""
+    # first we create a random state key and add it to the login session
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) \
+                    for i in xrange(32))
+    login_session['state'] = state
+    # Next we return it for debugging purposes
+    return render_template('login.html', STATE=state)
+
+# OAuth2 Connect ---------------------------------------------------------------
+
+@mod.route('/gconnect', methods=['POST'])
 def gconnect():
     """Handles the data sent by the google signin ajax"""
      # First validate state token to protect from CSRF
@@ -243,37 +119,7 @@ def gconnect():
     flash("you are now logged in as %s" % login_session['username'])
     return output
 
-@app.route('/gdisconnect')
-def gdisconnect():
-    access_token = login_session['credentials_token']
-    print 'In gdisconnect access token is %s' % access_token
-    print 'User name is: '
-    print login_session['username']
-    print 'Access token is'
-    print access_token
-    if access_token is None:
-        print 'Access Token is None'
-        response = make_response(json.dumps('Current user not connected.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-    	return response
-    print "We will disconnect by using GooglesREST API"
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
-    headers = {"Content-type":"application/x-www-form-urlencoded"}
-    print "getting %s" % url
-    h = httplib2.Http()
-    r = h.request(url, 'GET')[0]
-    print r
-    result = r
-    if result['status'] == 200:
-    	response = make_response(json.dumps('Successfully disconnected.'), 200)
-    	response.headers['Content-Type'] = 'application/json'
-    	return response
-    else:
-    	response = make_response(json.dumps('Failed to revoke token for given user.', 400))
-    	response.headers['Content-Type'] = 'application/json'
-    	return response
-
-@app.route('/fbconnect', methods=['POST'])
+@mod.route('/fbconnect', methods=['POST'])
 def fbconnect():
     # First we check the state token
     if request.args.get('state') != login_session['state']:
@@ -328,7 +174,39 @@ def fbconnect():
     flash("you are now logged in as %s" % login_session['username'])
     return output
 
-@app.route('/fbdisconnect')
+# OAuth2 Disconnect ------------------------------------------------------------
+
+@mod.route('/gdisconnect')
+def gdisconnect():
+    access_token = login_session['credentials_token']
+    print 'In gdisconnect access token is %s' % access_token
+    print 'User name is: '
+    print login_session['username']
+    print 'Access token is'
+    print access_token
+    if access_token is None:
+        print 'Access Token is None'
+        response = make_response(json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+    	return response
+    print "We will disconnect by using GooglesREST API"
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    headers = {"Content-type":"application/x-www-form-urlencoded"}
+    print "getting %s" % url
+    h = httplib2.Http()
+    r = h.request(url, 'GET')[0]
+    print r
+    result = r
+    if result['status'] == 200:
+    	response = make_response(json.dumps('Successfully disconnected.'), 200)
+    	response.headers['Content-Type'] = 'application/json'
+    	return response
+    else:
+    	response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+    	response.headers['Content-Type'] = 'application/json'
+    	return response
+
+@mod.route('/fbdisconnect')
 def fbdisconnect():
     facebook_id = login_session['facebook_id']
     access_token = login_session['access_token']
@@ -340,7 +218,7 @@ def fbdisconnect():
     print result
     return
 
-@app.route('/disconnect')
+@mod.route('/disconnect')
 def disconnect():
     if 'provider' in login_session:
         if login_session['provider'] == 'google':
@@ -355,14 +233,9 @@ def disconnect():
         del login_session['username']
     	del login_session['email']
     	del login_session['picture']
-        print "Successfully logged out -------------------------------------- !!"
+        print "Successfully logged out ------------------------------------- !!"
         flash("You have successfully logged out!")
         return redirect(url_for('ListResturants'))
     else:
         flash("You werent even logged in")
         return redirect(url_for('login'))
-
-if __name__ == "__main__":
-    app.secret_key = "my_secret_key"
-    app.debug = True
-    app.run(host='0.0.0.0', port = 5000)

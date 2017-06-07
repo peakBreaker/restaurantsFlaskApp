@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>These are the resturants!</h1>
+    <div>
+      {% for r in resturants %}
+        <h3><a href="/resturants/{{r.id}}">{{r.name}}</a></h3>
+        <ul>
+          <li>
+            <p>Address: {{r.address}}</p>
+          </li>
+          <li>
+            <p>City: {{r.city}}</p>
+          </li>
+          <li>
+            <p>State: {{r.state}}</p>
+          </li>
+          <li>
+            <p>zipCode: {{r.zipCode}}</p>
+          </li>
+        </ul>
+      {% endfor %}
+    </div>
+
+{% endblock %}
