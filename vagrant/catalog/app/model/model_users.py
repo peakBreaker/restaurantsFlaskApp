@@ -1,6 +1,6 @@
 """Contains functions for doing CRUD on the MenuItems table"""
 
-from restaurants import Base, restaurants, MenuItems, Users
+from restaurants import Base, Restaurants, MenuItems, Users
 from makesession import makesession
 
 session = makesession(Base)

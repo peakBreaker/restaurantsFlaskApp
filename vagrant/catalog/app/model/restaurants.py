@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-class restaurants(Base):
+class Restaurants(Base):
     __tablename__ = 'restaurants'
     id = Column(Integer, primary_key = True)
     name =Column(String(80), nullable = False)
@@ -31,6 +31,7 @@ class MenuItems(Base):
     name = Column(String(80), nullable = False)
     description = Column(String(1000))
     price = Column(Integer)
+    course = Column(String(150))
     restaurant_id = Column(Integer, ForeignKey('restaurants.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
 
@@ -49,8 +50,6 @@ class Users(Base):
     name = Column(String(80), nullable = False)
     email = Column(String(80), nullable = False)
     picture = Column(String(250))
-
-
 
 engine = create_engine('sqlite:///restaurantmenuwithusers.db')
 

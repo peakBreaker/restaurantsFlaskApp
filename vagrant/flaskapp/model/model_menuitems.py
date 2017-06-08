@@ -17,6 +17,7 @@ def list_menu(resturantid=False):
     return menulist
 
 def get_resturantitem(resturant_id, menuitem_id):
+    """Queries the db for menuitems for the selected restaurant"""
     menulist = session.query(MenuItems).filter_by(resturant_id=resturant_id).all()
     return menulist[int(menuitem_id)].serialize
 

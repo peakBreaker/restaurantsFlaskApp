@@ -1,23 +1,29 @@
 """Contains functions for doing CRUD on the MenuItems table"""
 
-from restaurants import Base, restaurants, MenuItems
+from restaurants import Base, Restaurants, MenuItems
 from makesession import makesession
 
 session = makesession(Base)
 
-def list_menu(restaurantid=False):
+def read_menuitems(restaurant_id=None, menuitem_id=None):
     """
-    Lists out menu for all restaurants if no arg is given, or a specific
-    restaurant id if arg is given
+    Lists out menuitems depending on args:
+    1. A specific menuitem if menuitem_id is given
+    2. All menuitems if no args is given
+    3. All menuitems for a specific restaurant if restaurantid is given
     """
-    if restaurantid == False:
-        menulist = session.query(MenuItems).all()
+    if menuitem_id != None:
+        # Then we show info about the selected item
+        return session.query(MenuItems).filter_by(id=menuitem_id).one().serialize
+    elif restaurantid == None:
+        # Then we list all menuitems
+        return session.query(MenuItems).order_by(MenuItems.name).all()
     else:
-        menulist = session.query(MenuItems).filter_by(restaurant_id=restaurantid).all()
-    return menulist
+        # Then we list all menuitems for selected restaurant
+        return session.query(MenuItems).filter_by(restaurant_id=restaurant_id).order_by(MenuItems.name).all()
 
 def get_restaurantitem(restaurant_id, menuitem_id):
-    menulist = session.query(MenuItems).filter_by(restaurant_id=restaurant_id).all()
+    menulist = session.query(MenuItems).filter_by(restaurant_id=restaurant_id).order_by(MenuItems.name).all()
     return menulist[int(menuitem_id)].serialize
 
 def insert_menuitem(name, description, price, restaurant_id, user_id):

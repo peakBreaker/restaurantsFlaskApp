@@ -1,9 +1,9 @@
-from sqlalchemy import create_engine #, func to aggregate
+from sqlalchemy import create_engine #, *func* to aggregate
 from sqlalchemy.orm import sessionmaker
 
 def makesession(Base):
     #Initiate the engine obj
-    engine = create_engine('sqlite:///resturantmenuwithusers.db')
+    engine = create_engine('sqlite:///restaurantmenuwithusers.db')
     # Bind engine and the base obj
     Base.metadata.bind = engine
     # Init the session

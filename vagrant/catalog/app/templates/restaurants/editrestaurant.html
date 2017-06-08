@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <body>
+    <h1>Lets edit the resturant with id = {{id}}</h1>
+    <form class="form" action="{{ url_for('site.Editrestaurant', restaurant_id=id) }}" enctype='multipart/form-data' method="post">
+      <table>
+        <tr class="row">
+          <td class="col">Name:</td>
+          <td class="col">
+            <input type="text" name="name" value="">
+          </td>
+        </tr>
+        <tr class="row">
+          <td class="col">Address:</td>
+          <td class="col">
+            <input type="text" name="address" value="">
+          </td>
+        </tr>
+        <tr class="row">
+          <td class="col">City</td>
+          <td class="col">
+            <input type="text" name="city" value="">
+          </td>
+        </tr>
+        <tr class="row">
+          <td class="col">State:</td>
+          <td class="col">
+            <input type="text" name="state" value="">
+          </td>
+        </tr>
+        <tr class="row">
+          <td class="col">Zip:</td>
+          <td class="col">
+            <input type="text" name="zipCode" value="">
+          </td>
+        </tr>
+      </table>
+      <input type="hidden" name="id" value={id}>
+      <input type="Submit">
+    </form>
+
+{% endblock %}

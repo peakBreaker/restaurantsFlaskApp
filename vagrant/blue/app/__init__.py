@@ -3,7 +3,7 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 # Import SQLAlchemy
-#from flask.ext.sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 
 # Configurations
 app.config.from_object('config')

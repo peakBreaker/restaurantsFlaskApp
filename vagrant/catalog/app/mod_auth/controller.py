@@ -1,6 +1,9 @@
 
 # Imports for flask
-from flask import Blueprint, render_template, url_for, flash
+from flask import Blueprint, render_template, url_for, flash, request, redirect
+
+# Imports from models
+from app.model.model_users import createUser, getUserInfo, getUserID
 
 # Imports for oath2
 from oauth2client.client import flow_from_clientsecrets
@@ -10,7 +13,15 @@ import json
 from flask import make_response
 import requests
 
+# Imports for handeling sessions and login state
+from flask import session as login_session
+import random, string
+
 mod = Blueprint('auth', __name__)
+
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
+APPLICATION_NAME = "Restaurant Menu Application"
 
 # Login ------------------------------------------------------------------------
 
@@ -233,9 +244,10 @@ def disconnect():
         del login_session['username']
     	del login_session['email']
     	del login_session['picture']
+        del login_session['provider']
         print "Successfully logged out ------------------------------------- !!"
         flash("You have successfully logged out!")
-        return redirect(url_for('ListResturants'))
+        return redirect(url_for('site.Listrestaurants'))
     else:
         flash("You werent even logged in")
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
