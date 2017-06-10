@@ -247,7 +247,7 @@ def disconnect():
         del login_session['provider']
         print "Successfully logged out ------------------------------------- !!"
         flash("You have successfully logged out!")
-        return redirect(url_for('site.Listrestaurants'))
+        return redirect(url_for('site.show_restaurants'))
     else:
         flash("You werent even logged in")
         return redirect(url_for('auth.login'))

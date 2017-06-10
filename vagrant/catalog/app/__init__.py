@@ -16,5 +16,5 @@ from app.mod_auth.controller import mod as auth_module
 site_module = mod_site.mod
 
 app.register_blueprint(site_module)
-app.register_blueprint(api_module, url_prefix='/api')
 app.register_blueprint(auth_module)
+app.register_blueprint(api_module, url_prefix='/api')

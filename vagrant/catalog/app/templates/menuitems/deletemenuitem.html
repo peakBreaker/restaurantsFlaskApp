@@ -2,12 +2,12 @@
 
 {% block content %}
 
-    <h1>Are you sure you want to delete menuitem with id {{menuitem_id}}</h1>
+    <h1>Sure you wish to delete menuitem {{menuitem_id}}?</h1>
 
     <form action="{{ url_for('site.remove_menuitem', restaurant_id=restaurant_id, menuitem_id=menuitem_id) }}" method="post">
-      <input type="Submit">
+      <input class="btn btn-block btn-primary" type="Submit">
       <br>
-      <a href="/menu">Cancel</a>
+      <a class="btn btn-block btn-primary" href="{{ url_for('site.show_menuitems', restaurant_id=restaurant_id, menuitem_id=menuitem_id) }}">Cancel</a>
     </form>
 
 {% endblock %}

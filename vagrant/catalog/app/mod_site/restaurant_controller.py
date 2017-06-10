@@ -39,6 +39,7 @@ def new_restaurant():
         user_id = login_session['user_id']
         # Next we call the create_resturant function from the model module
         s = create_restaurant(name, address, city, state, zipCode, user_id)
+        flash("Successfully created your new restaurant")
         # Finally we return the success html
         return render_template("submitted.html")
     else:
@@ -51,7 +52,7 @@ def show_restaurants(restaurant_id=None):
     # First check if user is logged in
     if 'username' not in login_session:
         return render_template  (
-                                'restaurants/public.html',
+                                'restaurants/public_restaurants.html',
                                 restaurants=read_restaurants(restaurant_id)[0]
                                 )
     # If user is logged in we render restaurants.html page with appropriate data
@@ -89,6 +90,7 @@ def edit_restaurant(restaurant_id):
                 # Next we do the db edit
                 update_restaurant(restaurant_id, name, address, city, state, zipCode)
                 # Finally we return the success html
+                flash("Edited your restaurant")
                 return render_template("submitted.html")
             else:
                 print r[0][0].name
@@ -112,6 +114,7 @@ def remove_restaurant(restaurant_id):
                 deleted = delete_restaurant(restaurant_id)
                 print deleted
                 # Finally we return the success html
+                flash("Deleted your restaurant")
                 return render_template("submitted.html")
             else:
                 print r[0][0].name

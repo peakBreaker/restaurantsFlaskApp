@@ -20,9 +20,13 @@
           <td>Price</td>
           <td><input type="text" name="price" value=""></td>
         </tr>
-        <br>
-        <input type="Submit">
       </table>
+      <br>
+      <input class="btn btn-block btn-primary"
+      type="Submit">
+      <a class="btn btn-block btn-primary"
+      href="{{ url_for('site.show_menuitems', restaurant_id=restaurant.id) }}">Cancel</a>
+    </form>
     </form>
 
 {% endblock %}

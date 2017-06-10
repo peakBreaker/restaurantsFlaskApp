@@ -2,9 +2,11 @@
 <html>
 <head>
 	<title>Restaurants webapp</title>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/landing.css') }}">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- meta tags -->
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<!-- jQuery -->
 	<script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -16,7 +18,7 @@
 </head>
 <body>
 
-	<div class='container'>
+	<div class="container">
     <div class="introduction">
       <script>
             $(document).ready(function(){
@@ -32,6 +34,7 @@
           <div>
             <img src="static/img/index.png" class="img-responsive" alt="logo" style="padding-bottom:40px">
           </div>
+					<a class="btn btn-block btn-primary" href="{{ url_for('site.show_restaurants') }}">Restaurants</a> <br>
           <a class="btn btn-block btn-primary" href="/login">Sign in</a> <br>
           <a class="btn btn-block btn-primary" href="/about">About</a> <br>
           <a class="btn btn-block btn-primary" href="/contact">Contact</a> <br>
@@ -49,7 +52,7 @@
   		      <a href="#">Terms of Service</a> | <a href="#">Privacy</a>
   		    </div>
   		   	<div class="col-xs-12 col-md-6">
-  		     	<p class="muted pull-right">© 2017 Anders L. Hurum @ Sensario. All rights reserved</p>
+  		     	<p class="muted pull-right">© 2017 Anders L. Hurum. All rights reserved</p>
   		    </div>
   	    </div>
   	  </div>

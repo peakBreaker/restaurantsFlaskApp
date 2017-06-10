@@ -4,7 +4,11 @@
 
     <h1>Are you sure you wish to delete teh post with id = {{restaurant.id}}</h1>
     <form class="form" action="{{ url_for('site.remove_restaurant', restaurant_id=restaurant.id) }}" enctype='multipart/form-data' method="post">
-      <input type="Submit">
+      <input class="btn btn-block btn-primary"
+      type="Submit">
+      <a class="btn btn-block btn-primary"
+      href="{{ url_for('site.show_restaurants', restaurant_id=restaurant.id) }}">Cancel</a>
+    </form>
     </form>
 
 {% endblock %}

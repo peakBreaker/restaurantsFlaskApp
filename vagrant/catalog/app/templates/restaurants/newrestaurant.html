@@ -37,7 +37,11 @@
         </tr>
       </table>
 
-      <input type="Submit">
+      <input class="btn btn-block btn-primary"
+      type="Submit">
+      <a class="btn btn-block btn-primary"
+      href="{{ url_for('site.show_restaurants') }}">Cancel</a>
+    </form>
     </form>
 
 {% endblock %}

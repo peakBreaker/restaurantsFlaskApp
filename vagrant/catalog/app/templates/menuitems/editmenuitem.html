@@ -2,11 +2,12 @@
 
 {% block content %}
 
-    <h1>Lets edit some items!</h1>
+    <h1>Lets edit {{item.name}}</h1>
 
     <form class="form"
     action="{{ url_for('site.edit_menuitem', restaurant_id=restaurant_id, menuitem_id=item.id) }}"
      method="post">
+     <table>
       <tr>
         <td>Name:</td>
         <td><input type="text" name="name" value="{{item.name}}"></td>
@@ -19,7 +20,11 @@
         <td>Price</td>
         <td><input type="text" name="price" value="{{item.price}}"></td>
       </tr>
-        <input type="Submit">
+     </table>
+      <br>
+      <input class="btn btn-block btn-primary" type="Submit">
+      <a class="btn btn-block btn-primary"
+      href="{{ url_for('site.show_menuitems', restaurant_id=restaurant_id, menuitem_id=item.id) }}">Cancel</a>
     </form>
 
 {% endblock %}

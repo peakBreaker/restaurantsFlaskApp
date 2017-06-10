@@ -5,6 +5,8 @@
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/landing.css') }}">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- meta tags -->
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<!-- jQuery -->
 	<script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -18,21 +20,25 @@
 
 	<div class='introduction'>
     <div class="container">
-      <div class="row page">
-        <div class="col-xs-0 col-md-2 "></div>
-
-        <div class="col-xs-12 col-md-8 aboutus">
-          <h1>About the project</h1>
-          <p>Lorem ipsum</p>
-          <img class="img-responsive"
-          src="{{ url_for('static', filename='img/codereview.jpg') }}"
-          alt="codereview lolcat">
-          <p>purr purr..</p>
+      <div class="row">
+        <div class="col-xs-0 col-md-2"></div>
+        <div class="col-xs-12 col-md-8 page">
+					<div class="row">
+						<div class="col-xs-0 col-md-2 "></div>
+						<div class="col-xs-12 col-md-8">
+							<h1>About the project</h1>
+		          <p>Lorem ipsum</p>
+		          <img class="img-responsive"
+		          src="{{ url_for('static', filename='img/codereview.jpg') }}"
+		          alt="codereview lolcat">
+		          <p>purr purr..</p>
+							<a class="btn btn-block btn-primary" href="/">Back</a> <br>
+						</div>
+						<div class="col-xs-0 col-md-2 "></div>
+          </div>
         </div>
-
         <div class="col-xs-0 col-md-2"></div>
       </div>
-
     </div>
   </div>
 
@@ -44,7 +50,7 @@
   		      <a href="#">Terms of Service</a> | <a href="#">Privacy</a>
   		    </div>
   		   	<div class="col-xs-12 col-md-6">
-  		     	<p class="muted pull-right">© 2017 Anders L. Hurum @ Sensario. All rights reserved</p>
+  		     	<p class="muted pull-right">© 2017 Anders L. Hurum. All rights reserved</p>
   		    </div>
   	    </div>
   	  </div>

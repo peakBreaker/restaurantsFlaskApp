@@ -23,6 +23,11 @@ class Restaurants(Base):
         return {
             'name': self.name,
             'id': self.id,
+            'address': self.address,
+            'city': self.city,
+            'state': self.state,
+            'zipCode': self.zipCode,
+            'owner': self.user_id
         }
 
 class MenuItems(Base):
@@ -42,6 +47,7 @@ class MenuItems(Base):
             'description': self.description,
             'id': self.id,
             'price': self.price,
+            'owner': self.user_id
         }
 
 class Users(Base):

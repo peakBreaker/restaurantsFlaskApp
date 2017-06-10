@@ -44,13 +44,18 @@ def new_menuitem(restaurant_id):
 @mod.route('/restaurants/<int:restaurant_id>/menu/<int:menuitem_id>')
 def show_menuitems(restaurant_id, menuitem_id=None):
     """Lets user view all menuitems in db or for specific restaurant"""
-    # We read the database to get manuitems and restaurant data
     r = read_restaurants(restaurant_id, login_session['user_id'])
     restaurant = r[0][0]
     owner = r[1]
     items = read_menuitems(restaurant_id, menuitem_id)
-    # And return the data to the user
-    return render_template('menuitems/menuitems.html', restaurant=restaurant, items=items, owner=owner)
+    if 'username' not in login_session:
+        return render_template  (
+                                'menuitems/public_menuitems.html',
+                                restaurant=restaurant, items=items
+                                )
+    else:
+        # And return the data to the user
+        return render_template('menuitems/menuitems.html', restaurant=restaurant, items=items, owner=owner)
 
 @mod.route('/restaurants/<int:restaurant_id>/menu/<int:menuitem_id>/edit',\
             methods=['GET', 'POST'])

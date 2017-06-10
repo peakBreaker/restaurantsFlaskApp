@@ -5,7 +5,25 @@
     <h1>These are the resturants!</h1>
     <div>
       {% for r in restaurants %}
+      <div class="wrapper-content">
         <h3><a href="/restaurants/{{r.id}}">{{r.name}}</a></h3>
+        <ul>
+          <li>
+            <p>Address: {{r.address}}</p>
+          </li>
+          <li>
+            <p>City: {{r.city}}</p>
+          </li>
+          <li>
+            <p>State: {{r.state}}</p>
+          </li>
+          <li>
+            <p>zipCode: {{r.zipCode}}</p>
+          </li>
+        </ul>
+        <a class="btn btn-block btn-primary"
+        href="{{ url_for('site.show_menuitems', restaurant_id=r.id) }}">See menu</a>
+      </div>
       {% endfor %}
     </div>
 

@@ -15,49 +15,6 @@ canvas{
   margin-bottom: 30px;
 }
 
-
-@media screen and (min-width: 600px) {
-  .introduction {
-    height: 100vh;
-    width: 100vw;
-    background: url(../img/landing.jpg) no-repeat center center;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-position: absolute;
-  }
-
-  .landing-wrapper{
-    padding-top: 20vh;
-    padding-bottom: auto;
-  }
-
-  .landing-inner{
-    max-width: 380px;
-    padding: 15px 35px 45px;
-    margin: 0 auto;
-    background-color: #fff;
-    border: 3px solid rgba(0,0,0,0.1);
-    border-radius: 3px;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .introduction{
-    height: 100%;
-    width:100%;
-  }
-  .landing-wrapper{
-    padding:5px;
-  }
-  .landing-inner{
-    max-width: 380px;
-    margin: 0 auto;
-  }
-
-}
-
 .statusline-store{
   padding: 5px 0 5px 0;
 }
@@ -67,14 +24,30 @@ canvas{
   border: 3px solid rgba(0,0,0,0.1);
 }
 
+.wrapper-outer{
+  border: 3px solid rgba(0,0,0,0.1);
+  height: 100%;
+  min-height: 100vh;
+  padding: 20px 0 20px;
+  background-color: #fff;
+}
+
+.wrapper-content{
+    border: 3px solid rgba(0,0,0,0.1);
+    padding: 0 15px 10px 15px;
+    margin-bottom: 4px;
+    background-color: #BAC0C4;
+}
+
 html {
     position: relative;
     min-height: 100%;
 }
 
 body {
-    margin: 0 0 100px;
+    /*margin: 0 0 100px;*/
     padding-bottom: 100px;
+    background-color: #002B4B;
 }
 
 footer {
