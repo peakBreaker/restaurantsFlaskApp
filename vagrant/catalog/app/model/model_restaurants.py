@@ -6,17 +6,17 @@ from makesession import makesession
 
 session = makesession(Base)
 
-def list_restaurants(restaurantid, user_id=None):
+def read_restaurants(restaurantid, user_id=None):
     """
     Queries the database for restaurants. Takes restaurantid and userid args,
     and returns:
     1. If restaurantid = None -> Returns all list of restaurants in a tuple
     2. Else returns tuple of restaurant with desired id and bool of user ownership
     """
-    print user_id
+    print "User id is " + str(user_id)
     if restaurantid == None:
         print "Getting all restaurants!"
-        return (session.query(Restaurants).order_by(Restaurants.name).all(), False)
+        return (session.query(Restaurants).order_by(Restaurants.name).all(), None)
     else:
         restaurant = session.query(Restaurants).filter_by(id=restaurantid).one()
         print "got the restaurant"
@@ -28,7 +28,7 @@ def list_restaurants(restaurantid, user_id=None):
         else:
             return ([restaurant], False)
 
-def insert_restaurant(name, address, city, state, zipCode, user_id):
+def create_restaurant(name, address, city, state, zipCode, user_id):
     """Gets parameters for a new restaurants and adds it into the db"""
     print "insert restaurant model running"
     restaurant = Restaurants(
@@ -44,11 +44,12 @@ def insert_restaurant(name, address, city, state, zipCode, user_id):
     print "added new restaurant to db"
     return
 
-def edit_restaurant(restaurantid, name, address, city, state, zipCode, user_id):
+def update_restaurant(restaurantid, name, address, city, state, zipCode):
     """
     Gets the id of the restaurant to be renamed and renames it to the name
     passed
     """
+    print "edit restaurant model running!"
     restaurant = session.query(Restaurants).filter_by(id=restaurantid).one()
     restaurant.name = name
     restaurant.address = address
@@ -59,9 +60,9 @@ def edit_restaurant(restaurantid, name, address, city, state, zipCode, user_id):
     session.commit()
     print "uprdated restaurant in db"
 
-def delete_restaurant(id):
-    restaurant = session.query(Restaurants).filter_by(id=id).one()
+def delete_restaurant(restaurantid):
+    print "deleting restaurant"
+    restaurant = session.query(Restaurants).filter_by(id=restaurantid).one()
     session.delete(restaurant)
     session.commit()
-    print "restaurant deleted"
-    return
+    return "restaurant deleted"

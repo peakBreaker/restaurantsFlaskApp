@@ -1,0 +1,52 @@
+@media screen and (min-width: 600px) {
+  .introduction {
+    /*height: 100vh;
+    width: 100vw;*/
+    background: url(../img/landing.jpg) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: absolute;
+  }
+/*
+  .landing-wrapper{
+    padding-top: 20vh;
+    padding-bottom: auto;
+  }
+
+  .landing-inner{
+    max-width: 380px;
+    padding: 15px 35px 45px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 3px solid rgba(0,0,0,0.1);
+    border-radius: 3px;
+  }*/
+}
+
+@media screen and (max-width: 600px) {
+  .introduction{
+    height: 100%;
+    width:100%;
+  }
+  /*.landing-wrapper{
+    padding:5px;
+  }
+  .landing-inner{
+    max-width: 380px;
+    margin: 0 auto;
+  }*/
+
+}
+
+.aboutus {
+  border: 3px solid rgba(0,0,0,0.1);
+  background-color: #fff;
+  height: 100%;
+}
+
+.page {
+  height: 100vh;
+  padding: 20px 0 20px;
+}

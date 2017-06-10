@@ -3,41 +3,40 @@
 {% block content %}
 
   <body>
-    <h1>Lets edit the resturant with id = {{id}}</h1>
-    <form class="form" action="{{ url_for('site.Editrestaurant', restaurant_id=id) }}" enctype='multipart/form-data' method="post">
+    <h1>Lets edit the resturant with id = {{restaurant.id}}</h1>
+    <form class="form" action="{{ url_for('site.edit_restaurant', restaurant_id=restaurant.id) }}" enctype='multipart/form-data' method="post">
       <table>
         <tr class="row">
           <td class="col">Name:</td>
           <td class="col">
-            <input type="text" name="name" value="">
+            <input type="text" name="name" value="{{restaurant.name}}">
           </td>
         </tr>
         <tr class="row">
           <td class="col">Address:</td>
           <td class="col">
-            <input type="text" name="address" value="">
+            <input type="text" name="address" value="{{restaurant.address}}">
           </td>
         </tr>
         <tr class="row">
           <td class="col">City</td>
           <td class="col">
-            <input type="text" name="city" value="">
+            <input type="text" name="city" value="{{restaurant.city}}">
           </td>
         </tr>
         <tr class="row">
           <td class="col">State:</td>
           <td class="col">
-            <input type="text" name="state" value="">
+            <input type="text" name="state" value="{{restaurant.state}}">
           </td>
         </tr>
         <tr class="row">
           <td class="col">Zip:</td>
           <td class="col">
-            <input type="text" name="zipCode" value="">
+            <input type="text" name="zipCode" value="{{restaurant.zipCode}}">
           </td>
         </tr>
       </table>
-      <input type="hidden" name="id" value={id}>
       <input type="Submit">
     </form>
 

@@ -1,7 +1,23 @@
+"""Controller for handeling the restaurants.
+Naming convention worth noting is how handlers map to models:
+Handler -> Model CRUD
+1. new_restaurant -> create_restaurant
+2. show_restaurants -> read_restaurants
+3. edit_restaurant -> update_restaurant
+4. remove_restaurant -> delete_restaurant
+"""
+
+# Is there a better way to do this rather than circular imports?
+from . import mod
+
+from flask import render_template, url_for, request, flash, redirect
+
+from flask import session as login_session
+
 # database model imports for restaurants
-from app.model.model_restaurants import insert_restaurant, \
-                                        list_restaurants, \
-                                        edit_restaurant, \
+from app.model.model_restaurants import create_restaurant, \
+                                        read_restaurants, \
+                                        update_restaurant, \
                                         delete_restaurant
 
 # HANDLERS FOR RESTAURANTS -----------------------------------------------------
@@ -21,8 +37,8 @@ def new_restaurant():
         state = request.form['state']
         zipCode = request.form['zipCode']
         user_id = login_session['user_id']
-        # Next we call the insert_newresturant function from the model module
-        s = insert_restaurant(name, address, city, state, zipCode, user_id)
+        # Next we call the create_resturant function from the model module
+        s = create_restaurant(name, address, city, state, zipCode, user_id)
         # Finally we return the success html
         return render_template("submitted.html")
     else:
@@ -36,12 +52,11 @@ def show_restaurants(restaurant_id=None):
     if 'username' not in login_session:
         return render_template  (
                                 'restaurants/public.html',
-                                restaurants=list_restaurants(restaurant_id)[0]
+                                restaurants=read_restaurants(restaurant_id)[0]
                                 )
     # If user is logged in we render restaurants.html page with appropriate data
     else:
-        print login_session['user_id']
-        r = list_restaurants(restaurant_id, login_session['user_id'])
+        r = read_restaurants(restaurant_id, login_session['user_id'])
         print type(r)
         restaurants = r[0]
         owner = r[1]
@@ -62,7 +77,7 @@ def edit_restaurant(restaurant_id=False):
         return redirect('/login')
     else:
         user_id = login_session['user_id']
-        r = list_restaurants(restaurant_id, user_id)
+        r = read_restaurants(restaurant_id, user_id)
         if r[1] == True:
             if request.method == 'POST':
                 # Got post request -> First we get the request arguemnts
@@ -72,25 +87,35 @@ def edit_restaurant(restaurant_id=False):
                 state = request.form['state']
                 zipCode = request.form['zipCode']
                 # Next we do the db edit
-                edit_restaurant(restaurant_id, name, address, city, state, zipCode)
+                update_restaurant(restaurant_id, name, address, city, state, zipCode)
                 # Finally we return the success html
                 return render_template("submitted.html")
             else:
-                return render_template('restaurants/editrestaurant.html', id=restaurant_id)
+                print r[0][0].name
+                return render_template('restaurants/editrestaurant.html', restaurant=r[0][0])
         else:
             flash("You need to be the owner of the restaurant to edit")
-            return redirect(url_for('site.Listrestaurants', restaurant_id=restaurant_id))
+            return redirect(url_for('site.show_restaurants', restaurant_id=restaurant_id))
 
 @mod.route('/restaurants/<int:restaurant_id>/delete', methods=['GET', 'POST'])
-def delete_restaurant(restaurant_id=None):
+def remove_restaurant(restaurant_id=None):
     """Handler for deleteing restaurants"""
     # First we check user login
     if 'username' not in login_session:
         return redirect('/login')
-    # Next we check if the user is the owner
     else:
-        r = list_restaurants(restaurant_id, login_session['user_id'])
+        user_id = login_session['user_id']
+        r = read_restaurants(restaurant_id, user_id)
         if r[1] == True:
-            delete_restaurant(restaurant_id)
-            flash("Deleted restaurant: " + r[0].name)
-            return render_template('submitted.html')
+            if request.method == 'POST':
+                # Next we do the db delete
+                deleted = delete_restaurant(restaurant_id)
+                print deleted
+                # Finally we return the success html
+                return render_template("submitted.html")
+            else:
+                print r[0][0].name
+                return render_template('restaurants/deleterestaurant.html', restaurant=r[0][0])
+        else:
+            flash("You need to be the owner of the restaurant to delete")
+            return redirect(url_for('site.show_restaurants', restaurant_id=restaurant_id))

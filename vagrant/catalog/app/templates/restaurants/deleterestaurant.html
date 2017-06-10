@@ -2,9 +2,8 @@
 
 {% block content %}
 
-    <h1>Are you sure you wish to delete teh post with id = {id}</h1>
-    <form class="form" action="/resturants/delete" enctype='multipart/form-data' method="post">
-      <input type="hidden" name="id" value={id}>
+    <h1>Are you sure you wish to delete teh post with id = {{restaurant.id}}</h1>
+    <form class="form" action="{{ url_for('site.remove_restaurant', restaurant_id=restaurant.id) }}" enctype='multipart/form-data' method="post">
       <input type="Submit">
     </form>
 
