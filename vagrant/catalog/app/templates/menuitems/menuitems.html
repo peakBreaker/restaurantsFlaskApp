@@ -1,37 +1,32 @@
 {% extends "base.html" %}
-
+<!--Gets passed items and restaurant objects, and bool owner if user is owner-->
 {% block content %}
 <div class="pane">
-  <div class="flash">
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-          <li><strong>{{message}}</strong></li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-    <div class="header">
-      <h1>{{resturant.name}}</h1>
-    </div>
+  <div class="header">
+    <h1>{{restaurant.name}}</h1>
+    {% if owner %}
+      <!-- Links to edit/delete restaurant, add/edit/delete menu -->
+      <p>You are the owner of this post</p>
+      <a href="{{ url_for('site.new_menuitem', restaurant_id=restaurant.id) }}">New menuitem</a> <br>
+      <a href="{{ url_for('site.edit_restaurant', restaurant_id=restaurant.id) }}">Edit</a>
+      <a href="{{ url_for('site.remove_restaurant', restaurant_id=restaurant.id) }}">Delete</a>
+    {% else %}
+      <p>You are not the owner of this post</p>
+    {% endif %}
+    <p>Listing items for the restaurant</p>
   </div>
-    {% for i in items %}
-
-    <div>
-
+  {% for i in items %}
+    <div class="item">
+      <p>id is {{i.id}}</p>
       <p class="name">{{i.name}}</p>
-
       <p class="description">{{i.description}}</p>
-
       <p class="price"> {{i.price}} </p>
-
     </div>
-
-    <!-- Edit and delete url for here -->
-    <a href={{url_for('editmenu', menuitem_id=i.id)}}>Edit item</a>
-    <a href={{url_for('delmenuitem', menuitem_id=i.id)}}>Delete item</a>
-
-    {% endfor %}
+  <!-- Edit and delete url for here -->
+    {% if owner %}
+      <a href="{{ url_for('site.edit_menuitem', restaurant_id=restaurant.id, menuitem_id=i.id) }}">Edit item</a>
+      <a href="{{ url_for('site.remove_menuitem', restaurant_id=restaurant.id, menuitem_id=i.id) }}">Delete item</a>
+    {% endif %}
+  {% endfor %}
 </div>
 {% endblock %}

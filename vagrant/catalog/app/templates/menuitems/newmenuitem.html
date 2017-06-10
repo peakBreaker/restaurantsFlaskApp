@@ -3,7 +3,10 @@
 {% block content %}
 
     <h1>Lets make a new menu item!</h1>
-    <form action="/menu/{{resturant_id}}/new" method="post">
+    <form class="form"
+      action="{{ url_for('site.new_menuitem', restaurant_id=restaurant.id) }}"
+      enctype='multipart/form-data'
+      method="post">
       <table>
         <tr>
           <td>Name:</td>

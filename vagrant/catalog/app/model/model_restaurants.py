@@ -11,7 +11,8 @@ def read_restaurants(restaurantid, user_id=None):
     Queries the database for restaurants. Takes restaurantid and userid args,
     and returns:
     1. If restaurantid = None -> Returns all list of restaurants in a tuple
-    2. Else returns tuple of restaurant with desired id and bool of user ownership
+    2. Else returns tuple of restaurant (as a list) and bool of user ownership
+        -> return ([restaurant], owner)
     """
     print "User id is " + str(user_id)
     if restaurantid == None:
@@ -26,6 +27,7 @@ def read_restaurants(restaurantid, user_id=None):
             print "user is owner"
             return ([restaurant], True)
         else:
+            # If user is not owner, or not logged in at all
             return ([restaurant], False)
 
 def create_restaurant(name, address, city, state, zipCode, user_id):

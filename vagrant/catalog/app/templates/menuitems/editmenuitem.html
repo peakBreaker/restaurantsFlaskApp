@@ -4,18 +4,20 @@
 
     <h1>Lets edit some items!</h1>
 
-    <form class="" action="/menu/{{menuitem_id}}/edit" method="post">
+    <form class="form"
+    action="{{ url_for('site.edit_menuitem', restaurant_id=restaurant_id, menuitem_id=item.id) }}"
+     method="post">
       <tr>
         <td>Name:</td>
-        <td><input type="text" name="name" value=""></td>
+        <td><input type="text" name="name" value="{{item.name}}"></td>
       </tr>
       <tr>
         <td>Description</td>
-        <td><input type="text" name="description" value=""></td>
+        <td><input type="text" name="description" value="{{item.description}}"></td>
       </tr>
       <tr>
         <td>Price</td>
-        <td><input type="text" name="price" value=""></td>
+        <td><input type="text" name="price" value="{{item.price}}"></td>
       </tr>
         <input type="Submit">
     </form>

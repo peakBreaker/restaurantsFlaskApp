@@ -3,6 +3,10 @@
 {% block content %}
   {% if owner %}
     <h2>You are the owner of this resturant</h2>
+    <!-- Links to edit/delete restaurant, add/edit/delete menu -->
+    <a href="{{ url_for('site.edit_restaurant', restaurant_id=restaurants[0].id) }}">Edit</a>
+    <a href="{{ url_for('site.remove_restaurant', restaurant_id=restaurants[0].id) }}">Delete</a>
+    <br>
   {% elif owner == None %}
     <h2>List of restaurants</h2>
   {% else %}
@@ -13,6 +17,7 @@
     <div>
       {% for r in restaurants %}
         <h3><a href="/restaurants/{{r.id}}">{{r.name}}</a></h3>
+        <a href="{{ url_for('site.show_menuitems', restaurant_id=r.id) }}">See menu</a>
         <ul>
           <li>
             <p>Address: {{r.address}}</p>

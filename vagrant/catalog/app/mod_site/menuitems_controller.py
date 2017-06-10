@@ -5,63 +5,97 @@ from flask import render_template, url_for, request, flash, redirect
 # Imports for handeling sessions
 from flask import session as login_session
 
-from app.model.model_menuitems  import  insert_menuitem, \
+from app.model.model_restaurants import read_restaurants
+
+from app.model.model_menuitems  import  create_menuitem, \
                                         read_menuitems, \
-                                        edit_menuitem, \
+                                        update_menuitem, \
                                         delete_menuitem
 print "running menuitems controller"
 # HANDLERS FOR MENUITEMS -----------------------------------------------------------
 
-@mod.route('/restaurants/<int:restaurant_id>/menu/new', methods = ['GET', 'POST'])
-def new_menuitem(restaurant_id=False):
+@mod.route('/restaurants/<int:restaurant_id>/menu/new', methods=['GET', 'POST'])
+def new_menuitem(restaurant_id):
     """Checks user login, returns new menuitem form, and handles the post req"""
     # First check if user is logged in
     if 'username' not in login_session:
+        flash("You need to be logged in to add items!")
         return redirect('/login')
     # Next we check the request type and handle it appropriately
     if request.method == 'POST':
-        success = insertnewmenuitem(restaurant_id, login_session['user_id'])
+        name = request.form['name']
+        description = request.form['description']
+        price = request.form['price']
+        success = create_menuitem(name, description, price, restaurant_id, login_session['user_id'])
         if success:
             flash("New menuitem created!")
-            return redirect(url_for("showmenu", restaurant_id=restaurant_id))
+            return redirect(url_for("site.show_menuitems", restaurant_id=restaurant_id))
     else:
-        return render_newmenuitem(restaurant_id)
+        r = read_restaurants(restaurant_id, login_session['user_id'])
+        restaurant = r[0][0]
+        owner = r[1]
+        if owner:
+            return render_template('menuitems/newmenuitem.html', restaurant=restaurant)
+        else:
+            flash("You need to own the post to edit it!")
+            return redirect(url_for('site.show_menuitems', restaurant_id=restaurant_id))
 
-@mod.route('/menuitems')
+@mod.route('/restaurants/<int:restaurant_id>/menu')
 @mod.route('/restaurants/<int:restaurant_id>/menu/<int:menuitem_id>')
-def show_menu(restaurant_id=None, menuitem_id=None):
+def show_menuitems(restaurant_id, menuitem_id=None):
     """Lets user view all menuitems in db or for specific restaurant"""
     # We read the database to get manuitems and restaurant data
+    r = read_restaurants(restaurant_id, login_session['user_id'])
+    restaurant = r[0][0]
+    owner = r[1]
     items = read_menuitems(restaurant_id, menuitem_id)
     # And return the data to the user
-    return render_template('menu.html', restaurant=restaurant, items=items)
+    return render_template('menuitems/menuitems.html', restaurant=restaurant, items=items, owner=owner)
 
-@mod.route('/menu/<int:menuitem_id>/edit', methods = ['GET', 'POST'])
-def edit_menuitem(menuitem_id=False):
+@mod.route('/restaurants/<int:restaurant_id>/menu/<int:menuitem_id>/edit',\
+            methods=['GET', 'POST'])
+def edit_menuitem(restaurant_id, menuitem_id):
     """Handler which lets user edit a menutiem"""
     # First check if user is logged in
     if 'username' not in login_session:
         return redirect('/login')
     # Next we check the request method and handle it appropriately
     if request.method == 'POST':
-        restaurant_id = editmenuitem(menuitem_id)
-        if restaurant_id:
+        name = request.form['name']
+        description = request.form['description']
+        price = request.form['price']
+        success = update_menuitem(menuitem_id, name, description, price)
+        if success:
             flash("Menuitem edited!")
-            return redirect(url_for("showmenu", restaurant_id=restaurant_id))
+            return redirect(url_for("site.show_menuitems", restaurant_id=restaurant_id))
     else:
-        return render_editmenuitem(menuitem_id)
+        menuitem = read_menuitems(restaurant_id, menuitem_id)[0]
+        return render_template('menuitems/editmenuitem.html',
+                                restaurant_id=restaurant_id,
+                                item=menuitem)
 
-@mod.route('/menu/<int:menuitem_id>/delete', methods=['GET', 'POST'])
-def delete_menuitem(menuitem_id=False):
+@mod.route('/restaurants/<int:restaurant_id>/menu/<int:menuitem_id>/',\
+            methods=['GET', 'POST'])
+def remove_menuitem(restaurant_id, menuitem_id):
     """Handler which lets users delete menuitems"""
     # First check if user is logged in
     if 'username' not in login_session:
         return redirect('/login')
-    # Next we check the request method and handle it appropriately
-    if request.method == 'POST':
-        restaurant_id = deletemenuitem(menuitem_id)
-        if restaurant_id:
-            flash("Menuitem deleted!")
-            return redirect(url_for("showmenu", restaurant_id=restaurant_id))
+    # Next we check if user is owner of restaurant
+    user_id = login_session['user_id']
+    r = read_restaurants(restaurant_id, user_id)
+    if r[1] == True:
+        if request.method == 'POST':
+            deleted = delete_menuitem(menuitem_id)
+            if deleted:
+                flash("Menuitem deleted")
+                return redirect(url_for("site.show_menuitems", restaurant_id=restaurant_id))
+        else:
+            print r[0][0].name
+            return render_template('menuitems/deletemenuitem.html',
+                                    restaurant_id=restaurant_id,
+                                    menuitem_id=menuitem_id)
     else:
-        return render_deletemenuitem(menuitem_id)
+        # The user is not owner
+        flash("You need to be the owner of the restaurant to delete menuitem")
+        return redirect(url_for('site.show_restaurants', restaurant_id=restaurant_id))

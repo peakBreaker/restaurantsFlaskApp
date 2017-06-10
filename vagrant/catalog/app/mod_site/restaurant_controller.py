@@ -70,7 +70,7 @@ def show_restaurants(restaurant_id=None):
                                 )
 
 @mod.route('/restaurants/<int:restaurant_id>/edit', methods=['GET', 'POST'])
-def edit_restaurant(restaurant_id=False):
+def edit_restaurant(restaurant_id):
     """Gets the url restaurant id and handles editing"""
     # First check if user is logged in
     if 'username' not in login_session:
@@ -98,7 +98,7 @@ def edit_restaurant(restaurant_id=False):
             return redirect(url_for('site.show_restaurants', restaurant_id=restaurant_id))
 
 @mod.route('/restaurants/<int:restaurant_id>/delete', methods=['GET', 'POST'])
-def remove_restaurant(restaurant_id=None):
+def remove_restaurant(restaurant_id):
     """Handler for deleteing restaurants"""
     # First we check user login
     if 'username' not in login_session:
