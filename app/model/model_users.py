@@ -1,11 +1,11 @@
 """Contains functions for doing CRUD on the MenuItems table"""
 
-from restaurants import Base, Restaurants, MenuItems, Users
+from restaurants import Base, Users
 from makesession import makesession
 
 session = makesession(Base)
+# User Helper Functions -------------------------------------------------------
 
-# User Helper Functions --------------------------------------------------------
 
 def createUser(login_session):
     """Creates a new user row in the db and returns the user.id created"""
@@ -13,6 +13,7 @@ def createUser(login_session):
                    'email'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
+    print "created user with email: " + login_session['email']
     user = session.query(Users).filter_by(email=login_session['email']).one()
     return user.id
 

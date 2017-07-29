@@ -35,8 +35,13 @@
             <img src="static/img/index.png" class="img-responsive" alt="logo" style="padding-bottom:40px">
           </div>
 					<a class="btn btn-block btn-primary" href="{{ url_for('site.show_restaurants') }}">Restaurants</a> <br>
-          <a class="btn btn-block btn-primary" href="/login">Sign in</a> <br>
-          <a class="btn btn-block btn-primary" href="/about">About</a> <br>
+
+					{% if 'username' not in session %}
+						<a class="btn btn-block btn-primary" href="/login">Sign in</a> <br>
+					{% else %}
+						<a class="btn btn-block btn-primary" href="/disconnect">Sign out</a> <br>
+					{% endif %}
+					<a class="btn btn-block btn-primary" href="/about">About</a> <br>
           <a class="btn btn-block btn-primary" href="/contact">Contact</a> <br>
         </div>
       </div>

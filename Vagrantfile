@@ -14,18 +14,18 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: <<-SHELL
     apt-get -qqy update
-    apt-get -qqy upgrade
+    DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
     apt-get -qqy install make zip unzip postgresql
 
-    apt-get -qqy install python3 python3-pip
-    pip3 install --upgrade pip
-    pip3 install flask packaging oauth2client redis passlib flask-httpauth
-    pip3 install sqlalchemy flask-sqlalchemy psycopg2 bleach
+    # apt-get -qqy install python3 python3-pip
+    # pip3 install --upgrade pip
+    # pip3 install flask packaging oauth2client redis passlib flask-httpauth
+    # pip3 install sqlalchemy flask-sqlalchemy psycopg2 bleach
 
     apt-get -qqy install python python-pip
     pip2 install --upgrade pip
     pip2 install flask packaging oauth2client redis passlib flask-httpauth
-    pip2 install sqlalchemy flask-sqlalchemy psycopg2 bleach
+    pip2 install sqlalchemy flask-sqlalchemy psycopg2 bleach requests
 
     su postgres -c 'createuser -dRS vagrant'
     su vagrant -c 'createdb'

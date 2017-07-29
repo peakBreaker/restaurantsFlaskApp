@@ -16,7 +16,8 @@ import requests
 
 # Imports for handeling sessions and login state
 from flask import session as login_session
-import random, string
+import random
+import string
 
 mod = Blueprint('auth', __name__)
 
@@ -24,24 +25,26 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
-# Login ------------------------------------------------------------------------
+# Login -----------------------------------------------------------------------
+
 
 @mod.route('/login')
 def login():
     """Generates a login session and renders the login.html page"""
     # first we create a random state key and add it to the login session
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits) \
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for i in xrange(32))
     login_session['state'] = state
     # Next we return it for debugging purposes
     return render_template('login.html', STATE=state)
 
-# OAuth2 Connect ---------------------------------------------------------------
+# OAuth2 Connect --------------------------------------------------------------
+
 
 @mod.route('/gconnect', methods=['POST'])
 def gconnect():
     """Handles the data sent by the google signin ajax"""
-     # First validate state token to protect from CSRF
+    # First validate state token to protect from CSRF
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -91,8 +94,8 @@ def gconnect():
     stored_credentials = login_session.get('credentials_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_credentials is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(json.dumps(
+                                'Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -113,7 +116,7 @@ def gconnect():
     login_session['email'] = data['email']
 
     user_id = getUserID(login_session['email'])
-    if  user_id == None:
+    if user_id is None:
         # User is not in db -> Create user and return user_id
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
@@ -125,9 +128,11 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ''' " style = "width: 300px; height: 300px;border-radius:
+            150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '''
     flash("you are now logged in as %s" % login_session['username'])
     return output
+
 
 @mod.route('/fbconnect', methods=['POST'])
 def fbconnect():
@@ -140,12 +145,14 @@ def fbconnect():
     # Next we the auth code in the request
     access_token = request.data
     # Then we upgrade the client token to a long lived server-side token
-        # We start by getting our app id and app secret
-    app_id = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_id']
-    app_secret = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-        # Such that we can get the long lived token from fb graph api
+    # We start by getting our app id and app secret
+    app_id = json.loads(open('fb_client_secrets.json', 'r').
+                        read())['web']['app_id']
+    app_secret = json.loads(open('fb_client_secrets.json', 'r').
+                            read())['web']['app_secret']
+    # Such that we can get the long lived token from fb graph api
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' \
-        % (app_id,app_secret,access_token)
+        % (app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     token = json.loads(result)['access_token']
@@ -165,7 +172,7 @@ def fbconnect():
 
     # See if user exists in our db
     user_id = getUserID(login_session['email'])
-    if  user_id == None:
+    if user_id is None:
         # User is not in db -> Create user and return user_id
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
@@ -177,11 +184,13 @@ def fbconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ''' " style = "width: 300px; height: 300px;border-radius:
+            150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '''
     flash("you are now logged in as %s" % login_session['username'])
     return output
 
-# OAuth2 Disconnect ------------------------------------------------------------
+# OAuth2 Disconnect -----------------------------------------------------------
+
 
 @mod.route('/gdisconnect')
 def gdisconnect():
@@ -190,30 +199,34 @@ def gdisconnect():
     if access_token is None:
         response = make_response(json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
-    	return response
+        return response
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
-    headers = {"Content-type":"application/x-www-form-urlencoded"}
+    headers = {"Content-type": "application/x-www-form-urlencoded"}
     h = httplib2.Http()
     r = h.request(url, 'GET')[0]
     result = r
     if result['status'] == 200:
-    	response = make_response(json.dumps('Successfully disconnected.'), 200)
-    	response.headers['Content-Type'] = 'application/json'
-    	return response
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
     else:
-    	response = make_response(json.dumps('Failed to revoke token for given user.', 400))
-    	response.headers['Content-Type'] = 'application/json'
-    	return response
+        response = make_response(json.dumps(
+                'Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
 
 @mod.route('/fbdisconnect')
 def fbdisconnect():
     """Handler for disconnecting from fb auth session"""
     facebook_id = login_session['facebook_id']
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id, access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % \
+        (facebook_id, access_token)
     h = httplib2.Http()
-    result = h.request(url, 'DELETE')[1]
+    h.request(url, 'DELETE')[1]
     return
+
 
 @mod.route('/disconnect')
 def disconnect():
@@ -227,8 +240,8 @@ def disconnect():
             fbdisconnect()
             del login_session['facebook_id']
         del login_session['username']
-    	del login_session['email']
-    	del login_session['picture']
+        del login_session['email']
+        del login_session['picture']
         del login_session['provider']
         flash("You have successfully logged out!")
         return redirect(url_for('site.show_restaurants'))

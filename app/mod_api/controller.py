@@ -5,7 +5,8 @@ from app.model.model_menuitems import read_menuitems
 
 mod = Blueprint('api', __name__)
 
-# JSON REST API ----------------------------------------------------------------
+# JSON REST API ---------------------------------------------------------------
+
 
 @mod.route('/restaurants')
 @mod.route('/restaurants/<int:resturant_id>')

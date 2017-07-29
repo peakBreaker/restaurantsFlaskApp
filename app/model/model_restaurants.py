@@ -6,15 +6,16 @@ from makesession import makesession
 
 session = makesession(Base)
 
+
 def read_restaurants(restaurantid, user_id=None):
     """
     Queries the database for restaurants. Takes restaurantid and userid args,
     and returns:
-    1. If restaurantid = None -> Returns tuple of tuple ([restaurants], None)
+    1. If restaurantid = None -> Returns tuple ([restaurants], None)
     2. Else returns tuple of restaurant (as a list) and bool of user ownership
         -> return ([restaurant], owner)
     """
-    if restaurantid == None:
+    if restaurantid is None:
         # Getting all restaurants
         return (session.query(Restaurants).order_by(Restaurants.name).all(), None)
     else:
@@ -26,8 +27,9 @@ def read_restaurants(restaurantid, user_id=None):
             # If user is not owner, or not logged in at all
             return ([restaurant], False)
 
+
 def create_restaurant(name, address, city, state, zipCode, user_id):
-    """Gets parameters for a new restaurants and adds it into the db"""
+    "Gets parameters for a new restaurants and adds it into the db"
     restaurant = Restaurants(
                             name=name,
                             address=address,
@@ -40,8 +42,9 @@ def create_restaurant(name, address, city, state, zipCode, user_id):
     session.commit()
     return True
 
+
 def update_restaurant(restaurantid, name, address, city, state, zipCode):
-    """Updates a restaurant in the db, returns a string if successful"""
+    "Updates a restaurant in the db, returns a string if successful"
     restaurant = session.query(Restaurants).filter_by(id=restaurantid).one()
     restaurant.name = name
     restaurant.address = address
@@ -52,9 +55,13 @@ def update_restaurant(restaurantid, name, address, city, state, zipCode):
     session.commit()
     return True
 
+
 def delete_restaurant(restaurantid):
-    """Deletes restaurant with passed id"""
+    "Deletes restaurant with belonging menuitems with passed restautant id"
     restaurant = session.query(Restaurants).filter_by(id=restaurantid).one()
+    menuitems = session.query(MenuItems).\
+        filter_by(restaurant_id=restaurantid).all()
+    session.delete(menuitems)
     session.delete(restaurant)
     session.commit()
     return True
