@@ -61,6 +61,6 @@ class Users(Base):
     picture = Column(String(250))
 
 
-engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine('postgresql+pg8000://catalog:culinaryadventure443@localhost:5432/restaurantswithusers')
 
 Base.metadata.create_all(engine)
