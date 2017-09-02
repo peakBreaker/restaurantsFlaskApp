@@ -1,8 +1,6 @@
-Place your catalog project in this directory.
-
 # Restaurants Webapplication
 
-A general dynamically driven webapplication project using the python flask framework and SQLite as DB.
+A sample dynamically driven webapplication project using the python flask framework and sqlalchemy.
 
 ## Getting started
 
@@ -24,22 +22,20 @@ Instructions on getting a local copy of the project running for development and 
 7. (Optional) Seed the database: `$ python seedMenus.py`
 8. Run the application: `$ python run.py`
 
-## OAuth tokens:
+#### OAuth tokens:
+
 Create a new project and credentials (google) or facebook login (facebook)
-https://developers.facebook.com/docs/facebook-login
+[Facebook](https://developers.facebook.com/docs/facebook-login)
+[Google](https://developers.google.com/)
+[I found this helpful for google oauth](https://support.google.com/googleapi/answer/6158857?hl=en)
 
-https://developers.google.com/
-https://support.google.com/googleapi/answer/6158857?hl=en
+Follow instructions given by the providers
 
-Follow instructions given
+## Deploying
 
-## About Udacity
+I have a running [AWS EC2](http://restaurants.peakbreaker.com) instance serving this application
 
-![Udacity](https://in.udacity.com/assets/images/svgs/logo_wordmark.svg)
-
-Udacity is a for-profit educational organization founded by Sebastian Thrun, David Stavens, and Mike Sokolsky offering massive open online courses. [Wikipedia](https://en.wikipedia.org/wiki/Udacity)
-
-This project is a part of my Udacity Full stack webdeveloper nanodegree.
+You may deploy your fork of this app aswell on a VPS by using my [serverConfig](https://github.com/peakBreaker/serverSetups) configuration management ansible-playbook scripts to automatically configure a server and deploy the app.
 
 ## License
 
