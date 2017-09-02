@@ -24,12 +24,10 @@ Instructions on getting a local copy of the project running for development and 
 
 #### OAuth tokens:
 
-Create a new project and credentials (google) or facebook login (facebook)
-[Facebook](https://developers.facebook.com/docs/facebook-login)
-[Google](https://developers.google.com/)
-[I found this helpful for google oauth](https://support.google.com/googleapi/answer/6158857?hl=en)
+Create a new project and credentials with [Google](https://developers.google.com/) and/or [Facebook](https://developers.facebook.com/docs/facebook-login)
 
-Follow instructions given by the providers
+- Follow instructions given by the oauth providers
+- [I found this helpful for google oauth](https://support.google.com/googleapi/answer/6158857?hl=en)
 
 ## Deploying
 
